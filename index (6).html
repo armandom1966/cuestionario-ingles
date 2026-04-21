@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulacro Ingles - Saber 11</title>
+<style>
+:root{--rojo:#C0392B;--turquesa:#17A589;--rojo-dark:#96281B;--turquesa-dark:#0E7060;--bg:#F4F6F7;--gray2:#D5D8DC;--gray3:#85929E;--dark:#1A252F;--text:#2C3E50;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.6;}
+#header{background:linear-gradient(135deg,var(--rojo),var(--rojo-dark));color:white;padding:18px 24px;text-align:center;}
+#header h1{font-size:1.4rem;font-weight:700;}
+#header p{font-size:0.85rem;opacity:0.85;margin-top:4px;}
+.screen{display:none;max-width:780px;margin:0 auto;padding:20px 16px 40px;}
+.screen.active{display:block;}
+.card{background:white;border-radius:12px;padding:28px 24px;box-shadow:0 2px 12px rgba(0,0,0,0.08);}
+.card h2{color:var(--rojo);font-size:1.2rem;margin-bottom:6px;}
+.card p{color:var(--gray3);font-size:0.88rem;margin-bottom:20px;}
+.form-group{margin-bottom:16px;}
+.form-group label{display:block;font-weight:600;font-size:0.88rem;color:var(--dark);margin-bottom:6px;}
+.form-group input,.form-group select{width:100%;padding:10px 14px;border:2px solid var(--gray2);border-radius:8px;font-size:0.95rem;outline:none;background:white;}
+.form-group input:focus,.form-group select:focus{border-color:var(--turquesa);}
+.btn-start{width:100%;padding:14px;background:linear-gradient(135deg,var(--turquesa),var(--turquesa-dark));color:white;border:none;border-radius:10px;font-size:1rem;font-weight:700;cursor:pointer;margin-top:8px;}
+.info-box{background:#EBF5FB;border-left:4px solid var(--turquesa);padding:12px 16px;border-radius:0 8px 8px 0;margin-bottom:20px;font-size:0.87rem;color:#1a5276;}
+.top-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+.pregunta-num{background:var(--rojo);color:white;padding:4px 12px;border-radius:20px;font-size:0.82rem;font-weight:700;}
+.timer-badge{background:var(--dark);color:white;padding:4px 12px;border-radius:20px;font-size:0.82rem;}
+.progress-bar{height:6px;background:var(--gray2);border-radius:3px;margin-bottom:16px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--turquesa),var(--rojo));border-radius:3px;transition:width 0.4s;}
+.card-pregunta{background:white;border-radius:12px;padding:22px 20px;box-shadow:0 2px 10px rgba(0,0,0,0.07);margin-bottom:14px;}
+.contexto-box{background:#FDFEFE;border:1px solid var(--gray2);border-left:4px solid var(--turquesa);border-radius:0 8px 8px 0;padding:12px 14px;margin-bottom:16px;font-size:0.87rem;color:#1a5276;line-height:1.7;}
+.texto-lectura{background:#F8F9FA;border:1px solid var(--gray2);border-radius:8px;padding:14px 16px;margin-bottom:16px;font-size:0.87rem;line-height:1.8;}
+.enunciado{font-size:0.95rem;line-height:1.7;margin-bottom:18px;}
+.opciones{display:flex;flex-direction:column;gap:10px;}
+.opcion{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;border:2px solid var(--gray2);border-radius:10px;cursor:pointer;transition:all 0.18s;background:white;}
+.opcion:hover{border-color:var(--turquesa);background:#f0faf8;}
+.opcion.correcta{border-color:#1e8449;background:#eafaf1;}
+.opcion.incorrecta{border-color:var(--rojo);background:#fdedec;}
+.opcion.mostrar-correcta{border-color:#1e8449;background:#eafaf1;}
+.letra{width:28px;height:28px;min-width:28px;border-radius:50%;background:var(--gray2);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.82rem;}
+.opcion.correcta .letra{background:#1e8449;color:white;}
+.opcion.incorrecta .letra{background:var(--rojo);color:white;}
+.opcion.mostrar-correcta .letra{background:#1e8449;color:white;}
+.opcion-texto{font-size:0.91rem;line-height:1.5;padding-top:2px;}
+.feedback-box{border-radius:10px;padding:12px 14px;margin-top:14px;font-size:0.87rem;display:none;line-height:1.6;}
+.feedback-box.correcto{background:#eafaf1;border:1px solid #1e8449;color:#1e6035;display:block;}
+.feedback-box.incorrecto{background:#fdedec;border:1px solid var(--rojo);color:#7b241c;display:block;}
+.btn-sig{width:100%;padding:13px;background:linear-gradient(135deg,var(--rojo),var(--rojo-dark));color:white;border:none;border-radius:10px;font-size:0.97rem;font-weight:700;cursor:pointer;display:none;margin-top:4px;}
+#mapa-container{background:white;border-radius:12px;padding:16px;box-shadow:0 2px 10px rgba(0,0,0,0.07);margin-bottom:14px;}
+#mapa-container h3{font-size:0.85rem;color:var(--gray3);margin-bottom:10px;}
+#mapa{display:flex;flex-wrap:wrap;gap:6px;}
+.mapa-btn{width:32px;height:32px;border-radius:6px;border:2px solid var(--gray2);background:white;font-size:0.75rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--gray3);}
+.mapa-btn.respondida{background:var(--turquesa);border-color:var(--turquesa);color:white;}
+.mapa-btn.actual{border-color:var(--rojo);color:var(--rojo);}
+#screen-resultados{text-align:center;}
+.res-header{background:linear-gradient(135deg,var(--rojo),var(--rojo-dark));color:white;border-radius:16px;padding:28px 20px;margin-bottom:20px;}
+.puntaje-grande{font-size:3.8rem;font-weight:900;line-height:1;margin:12px 0;}
+.nivel-badge{display:inline-block;padding:5px 18px;border-radius:20px;font-size:0.88rem;font-weight:700;background:rgba(255,255,255,0.2);margin-top:4px;}
+.barra-p{height:16px;background:rgba(255,255,255,0.25);border-radius:8px;overflow:hidden;margin:16px 0 6px;}
+.barra-fill{height:100%;border-radius:8px;background:white;transition:width 1.2s ease;}
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px;}
+.stat-card{background:white;border-radius:12px;padding:16px 10px;box-shadow:0 2px 8px rgba(0,0,0,0.07);}
+.stat-num{font-size:2rem;font-weight:800;}
+.stat-num.v{color:#1e8449;}.stat-num.r{color:var(--rojo);}.stat-num.g{color:var(--gray3);}
+.stat-label{font-size:0.78rem;color:var(--gray3);margin-top:2px;}
+.nivel-det{background:white;border-radius:12px;padding:18px;box-shadow:0 2px 8px rgba(0,0,0,0.07);margin-bottom:20px;text-align:left;}
+.nivel-det h3{color:var(--rojo);font-size:0.92rem;margin-bottom:12px;}
+.nrow{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:8px;margin-bottom:6px;font-size:0.86rem;}
+.nrow.activo{background:#FEF9E7;border:2px solid #F4D03F;font-weight:700;}
+.ndot{width:12px;height:12px;border-radius:50%;flex-shrink:0;}
+.btn-rev{width:100%;padding:14px;background:linear-gradient(135deg,var(--turquesa),var(--turquesa-dark));color:white;border:none;border-radius:10px;font-size:1rem;font-weight:700;cursor:pointer;margin-bottom:10px;}
+.btn-reiniciar{width:100%;padding:13px;background:white;color:var(--rojo);border:2px solid var(--rojo);border-radius:10px;font-size:0.95rem;font-weight:700;cursor:pointer;}
+.rcard{background:white;border-radius:12px;padding:18px;box-shadow:0 2px 8px rgba(0,0,0,0.06);margin-bottom:14px;border-left:5px solid var(--gray2);}
+.rcard.rc{border-left-color:#1e8449;}.rcard.ri{border-left-color:var(--rojo);}.rcard.rs{border-left-color:var(--gray3);}
+.rh{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.rbadge{font-size:0.76rem;font-weight:700;padding:3px 10px;border-radius:12px;}
+.rbadge.ok{background:#eafaf1;color:#1e6035;}.rbadge.mal{background:#fdedec;color:#7b241c;}.rbadge.sr{background:#F2F3F4;color:var(--gray3);}
+.rop{display:flex;gap:8px;align-items:flex-start;padding:6px 10px;border-radius:7px;font-size:0.84rem;}
+.rop.rc2{background:#eafaf1;color:#1e6035;font-weight:600;}.rop.ri2{background:#fdedec;color:#7b241c;}
+.rjust{font-size:0.83rem;color:#1a5276;background:#EBF5FB;padding:8px 12px;border-radius:7px;border-left:3px solid var(--turquesa);line-height:1.6;margin-top:8px;}
+.btn-volver{width:100%;padding:13px;background:linear-gradient(135deg,var(--rojo),var(--rojo-dark));color:white;border:none;border-radius:10px;font-size:0.95rem;font-weight:700;cursor:pointer;margin-bottom:20px;}
+.ebadge{display:inline-block;background:#EBF5FB;color:#1a5276;padding:3px 10px;border-radius:12px;font-size:0.78rem;font-weight:700;margin-bottom:10px;}
+</style>
+</head>
+<body>
+<div id="header">
+  <h1>Simulacro Ingles - Saber 11</h1>
+  <p>Prueba ICFES Colombia - Examen 1 y Examen 2</p>
+</div>
+<div id="screen-registro" class="screen active">
+  <div class="card" style="margin-top:20px;">
+    <h2>Bienvenido al simulacro!</h2>
+    <p>Completa tus datos para comenzar.</p>
+    <div class="info-box">50 preguntas de Ingles (Examen 1 y 2) - Vocabulario, lectura y uso del idioma - Con retroalimentacion inmediata</div>
+    <div class="form-group"><label>Institucion Educativa</label><input type="text" id="ii" placeholder="Nombre de tu colegio"/></div>
+    <div class="form-group"><label>Nombre Completo</label><input type="text" id="nn" placeholder="Tu nombre completo"/></div>
+    <div class="form-group"><label>Grado</label><select id="gg"><option value="">-- Selecciona --</option><option>9</option><option>10</option><option>11</option><option>Egresado</option><option>Otro</option></select></div>
+    <button class="btn-start" onclick="iniciar()">Comenzar Simulacro</button>
+  </div>
+</div>
+<div id="screen-pregunta" class="screen">
+  <div class="top-bar"><span class="pregunta-num" id="lp">Pregunta 1 / 50</span><span class="timer-badge" id="td">00:00</span></div>
+  <div class="progress-bar"><div class="progress-fill" id="pf" style="width:0%"></div></div>
+  <div id="mapa-container"><h3>Mapa de preguntas</h3><div id="mapa"></div></div>
+  <div class="card-pregunta">
+    <div id="eb"></div>
+    <div id="ca"></div>
+    <div id="ta"></div>
+    <div class="enunciado" id="et"></div>
+    <div class="opciones" id="oc"></div>
+    <div class="feedback-box" id="fb"></div>
+  </div>
+  <button class="btn-sig" id="bs" onclick="siguiente()">Siguiente</button>
+</div>
+<div id="screen-resultados" class="screen">
+  <div class="res-header">
+    <h2>Resultado Final</h2>
+    <div class="puntaje-grande" id="pd">0</div>
+    <div>puntos Saber 11</div>
+    <div class="barra-p"><div class="barra-fill" id="bf" style="width:0%"></div></div>
+    <div class="nivel-badge" id="nd">Nivel 1</div>
+  </div>
+  <div class="stats-grid">
+    <div class="stat-card"><div class="stat-num v" id="sc">0</div><div class="stat-label">Correctas</div></div>
+    <div class="stat-card"><div class="stat-num r" id="si">0</div><div class="stat-label">Incorrectas</div></div>
+    <div class="stat-card"><div class="stat-num g" id="ss">0</div><div class="stat-label">Sin responder</div></div>
+  </div>
+  <div class="nivel-det">
+    <h3>Niveles de Desempeno</h3>
+    <div class="nrow" id="n1"><div class="ndot" style="background:#E74C3C"></div><span>Nivel 1 Minimo (0-35)</span></div>
+    <div class="nrow" id="n2"><div class="ndot" style="background:#E67E22"></div><span>Nivel 2 Basico (36-55)</span></div>
+    <div class="nrow" id="n3"><div class="ndot" style="background:#F1C40F"></div><span>Nivel 3 Satisfactorio (56-75)</span></div>
+    <div class="nrow" id="n4"><div class="ndot" style="background:#27AE60"></div><span>Nivel 4 Avanzado (76-100)</span></div>
+  </div>
+  <button class="btn-rev" onclick="verRevision()">Revisar mis respuestas</button>
+  <button class="btn-reiniciar" onclick="reiniciar()">Nuevo intento</button>
+</div>
+<div id="screen-revision" class="screen">
+  <button class="btn-volver" onclick="volverRes()">Volver a resultados</button>
+  <div id="rc"></div>
+  <button class="btn-volver" onclick="volverRes()">Volver a resultados</button>
+</div>
+<script>
+var est={inst:'',nom:'',grd:''};
+var tInt=null,tSeg=0,idx=0,resp=[],fIni='';
+var COR=['B','D','E','A','G','B','C','B','C','C','A','A','B','B','A','A','A','C','B','C','A','C','C','D','C','C','D','F','B','B','C','B','A','C','B','A','B','B','B','A','A','B','B','D','A','B','B','D','A','A'];
+var PQ=[
+{e:'Examen 1',c:'CLOTHES AND ACCESSORIES - Parte 1: Lee las descripciones y elige la palabra correcta. Lista: A.glasses B.handbags C.hat D.pajamas E.scarf F.skirt G.socks H.watch (H fue el ejemplo)',t:'',q:'1. A person can carry things in one of these.',o:['A. glasses','B. handbags','C. hat','D. pajamas'],j:'B. handbags - A person uses a handbag to carry things. Los bolsos sirven para cargar cosas.'},
+{e:'Examen 1',c:'CLOTHES AND ACCESSORIES - Lista: A.glasses B.handbags C.hat D.pajamas E.scarf F.skirt G.socks',t:'',q:'2. You wear this when you go to bed.',o:['A. glasses','B. handbags','C. hat','D. pajamas'],j:'D. pajamas - You wear pajamas when you go to bed. El pijama es la ropa para dormir.'},
+{e:'Examen 1',c:'CLOTHES AND ACCESSORIES - Lista: A.glasses B.handbags C.hat D.pajamas E.scarf F.skirt G.socks',t:'',q:'3. You cover your neck with this.',o:['A. glasses','B. hat','C. skirt','E. scarf'],j:'E. scarf - A scarf is used to cover the neck. La bufanda cubre el cuello.'},
+{e:'Examen 1',c:'CLOTHES AND ACCESSORIES - Lista: A.glasses B.handbags C.hat D.pajamas E.scarf F.skirt G.socks',t:'',q:'4. Some people need them to see well.',o:['A. glasses','B. handbags','C. hat','G. socks'],j:'A. glasses - Some people need glasses/spectacles to see well. Las gafas ayudan a ver mejor.'},
+{e:'Examen 1',c:'CLOTHES AND ACCESSORIES - Lista: A.glasses B.handbags C.hat D.pajamas E.scarf F.skirt G.socks',t:'',q:'5. These are for your feet.',o:['A. glasses','C. hat','E. scarf','G. socks'],j:'G. socks - Socks are worn on your feet. Los calcetines van en los pies.'},
+{e:'Examen 1',c:'Parte 2 - WHERE CAN YOU SEE THIS SIGN?',t:'Aviso: "Draw a line to complete the snake and color it"',q:'6. Where can you see this sign?',o:['A. on a rug','B. on a test','C. on a bookcase'],j:'B. on a test - Esta instruccion de dibujar y colorear es tipica de una hoja de trabajo o prueba escolar.'},
+{e:'Examen 1',c:'Parte 3 - COMPLETE THE CONVERSATION',t:'',q:'7. Grandma, shall I hold those bags for you?',o:['A. I\'m not afraid!','B. Where are you?','C. That\'s fine.'],j:'C. That\'s fine. - When someone offers help, "That\'s fine" is a polite acceptance. Cuando ofrecen ayuda, "Esta bien" es la respuesta apropiada.'},
+{e:'Examen 1',c:'Parte 3 - COMPLETE THE CONVERSATION',t:'',q:'8. How much is that umbrella?',o:['A. Anything else?','B. 50 dollars.','C. Cash only!'],j:'B. 50 dollars. - When someone asks "How much?", you give a price as the answer. Cuando preguntan el precio, se responde con el valor.'},
+{e:'Examen 1',c:'Parte 4 - COFFEE TEXT',t:'COFFEE: Coffee is popular around the world. Its (9)_____ important component is caffeine.',q:'9. Its _____ important component is caffeine. (A.much / B.more / C.most)',o:['A. much','B. more','C. most'],j:'C. most - Superlativo: "most important" = el MAS importante. Se usa para indicar el mayor grado.'},
+{e:'Examen 1',c:'Parte 4 - COFFEE TEXT',t:'Coffee has been well-known (10)_____ the beginning of the 14th century.',q:'10. Coffee has been well-known _____ the beginning of the 14th century. (A.during / B.until / C.since)',o:['A. during','B. until','C. since'],j:'C. since - "Since" se usa con un punto de inicio en el tiempo: desde ese momento hasta ahora.'},
+{e:'Examen 1',c:'Parte 4 - COFFEE TEXT',t:'...well-known since the beginning of the 14th century, (11)_____ Sufi Yemenis started using coffee...',q:'11. ...century, _____ Sufi Yemenis started using coffee... (A.when / B.which / C.who)',o:['A. when','B. which','C. who'],j:'A. when - "When" introduce una clausula temporal que se refiere al siglo XIV como periodo de tiempo.'},
+{e:'Examen 1',c:'Parte 4 - COFFEE TEXT',t:'It became a popular medicine (12)_____ Europeans in the 1600s.',q:'12. It became a popular medicine _____ Europeans in the 1600s. (A.among / B.about / C.along)',o:['A. among','B. about','C. along'],j:'A. among - "Among" indica algo compartido dentro de un grupo. "Among Europeans" = entre los europeos.'},
+{e:'Examen 1',c:'Parte 4 - COFFEE TEXT',t:'Caffeine was first (13)_____ in the 1800s by Ferdinand Runge.',q:'13. Caffeine was first _____ in the 1800s. (A.describe / B.described / C.describes)',o:['A. describe','B. described','C. describes'],j:'B. described - Voz pasiva: "was described" requiere el participio pasado. La cafeina fue descrita.'},
+{e:'Examen 1',c:'Parte 4 - COFFEE TEXT',t:'Some people say (14)_____ coffee isn\'t good.',q:'14. Some people say _____ coffee isn\'t good. (A.drink / B.drinking / C.drunk)',o:['A. drink','B. drinking','C. drunk'],j:'B. drinking - "Drinking coffee" funciona como gerundio/sustantivo. "Say drinking coffee is bad" = decir que tomar cafe es malo.'},
+{e:'Examen 1',c:'Parte 4 - COFFEE TEXT',t:'...but doctors say you (15)_____ believe this.',q:'15. ...but doctors say you _____ believe this. (A.mustn\'t / B.couldn\'t / C.wouldn\'t)',o:['A. mustn\'t','B. couldn\'t','C. wouldn\'t'],j:'A. mustn\'t - Prohibicion o consejo fuerte: no DEBES creer eso. "Mustn\'t" = no debes/no puedes.'},
+{e:'Examen 1',c:'Parte 4 - COFFEE TEXT',t:'(16)_____ many people believe coffee is bad, studies show it is good for your heart.',q:'16. _____ many people believe coffee is bad, studies show it is good... (A.While / B.Except / C.Because)',o:['A. While','B. Except','C. Because'],j:'A. While - "While" introduce un contraste: aunque mucha gente cree X, los estudios muestran Y.'},
+{e:'Examen 1',c:'Parte 5 - JAMES SALTER\'S DAYS IN FILM. Texto: "He is best known as a novelist, but during the sixties and seventies, he worked in film making."',t:'',q:'17. James Salter played an important part in the making of movies...',o:['A. from 1960 to 1979','B. in 1957','C. after 1997'],j:'A. from 1960 to 1979 - "During the sixties and seventies" = los anos 60 y 70, es decir de 1960 a 1979.'},
+{e:'Examen 1',c:'Parte 5 - JAMES SALTER. Texto: "Burning the Days...was adapted into a film called Passionate Falsehoods."',t:'',q:'18. Passionate Falsehoods is...',o:['A. a newspaper','B. a play','C. a movie'],j:'C. a movie - El texto dice "was adapted into a film called Passionate Falsehoods". Es una PELICULA.'},
+{e:'Examen 1',c:'Parte 5 - JAMES SALTER. Texto: "Salter\'s time in the film world is both good and bad."',t:'',q:'19. Salter had nice and difficult times when he was...',o:['A. an actor','B. making movies','C. in a different city'],j:'B. making movies - Sus momentos buenos y malos ocurrieron durante su tiempo en el mundo del cine.'},
+{e:'Examen 1',c:'Parte 5 - JAMES SALTER. Texto: "Nick Paumgarten in The Last Book, describes Salter\'s opinion about his film career"',t:'',q:'20. The Last Book was written by...',o:['A. James Salter','B. Deborah Treisman','C. Nick Paumgarten'],j:'C. Nick Paumgarten - El texto dice "Nick Paumgarten in The Last Book" = Nick es el autor del libro.'},
+{e:'Examen 1',c:'Parte 5 - JAMES SALTER. Texto: "Salter thought he was wasting his time."',t:'',q:'21. James Salter thinks that his work in the cinema business was...',o:['A. not useful','B. not hard','C. not usual'],j:'A. not useful - "Wasting his time" significa que creia que su trabajo no era util ni valioso.'},
+{e:'Examen 1',c:'Parte 5 - JAMES SALTER. Texto: "...it still makes for attractive reading."',t:'',q:'22. Reading about James Salter\'s years in the cinema could be...',o:['A. clever enough','B. just fair','C. quite interesting'],j:'C. quite interesting - "Makes for attractive reading" = es una lectura bastante interesante/atractiva.'},
+{e:'Examen 1',c:'Parte 5 - JAMES SALTER. Texto: "The Last Book is available to everyone in online stores."',t:'',q:'23. The Last Book can be found...',o:['A. in museums','B. at a cafe','C. on the web'],j:'C. on the web - "Available in online stores" = disponible en tiendas en linea, es decir en internet.'},
+{e:'Examen 1',c:'Parte 6 - SWIFT PIZZA. Texto: "Today we have the pleasure of showing you the best letter written by our customer Mark. He wins 25 pounds for writing about us this week."',t:'',q:'24. According to the text, the customer...',o:['A. left a 25 pound tip','B. celebrated Christmas at this restaurant','C. found this restaurant after many attempts','D. posted an excellent review about this restaurant'],j:'D. posted an excellent review - Mark escribio una carta/resena excelente sobre el restaurante y gano 25 libras por ello.'},
+{e:'Examen 1',c:'Parte 6 - SWIFT PIZZA. Texto: "It certainly feels great to find new excellent food delivery companies for whenever you don\'t feel like cooking yourself."',t:'',q:'25. It can be inferred from the text that Mark...',o:['A. does not like cooking food for himself','B. almost always eats hamburgers','C. enjoys eating fast food sometimes','D. is tired of going to restaurants'],j:'C. enjoys eating fast food sometimes - Pide comida a domicilio "de vez en cuando" cuando no quiere cocinar, no siempre.'},
+{e:'Examen 2',c:'TRANSPORTATION - Parte 1: Lee las descripciones y elige la palabra correcta. Lista: A.ambulance B.boat C.bike D.bus E.motorbike F.plane G.train H.truck (H fue el ejemplo)',t:'',q:'1. You often learn to ride it when you are a child.',o:['A. ambulance','B. boat','C. bike','D. bus'],j:'C. bike - Children often learn to ride a bicycle when they are young. Los ninos aprenden a montar bicicleta de pequenos.'},
+{e:'Examen 2',c:'TRANSPORTATION - Lista: A.ambulance B.boat C.bike D.bus E.motorbike F.plane G.train',t:'',q:'2. People pay to take this public transport by road.',o:['C. bike','D. bus','E. motorbike','G. train'],j:'D. bus - El autobus es transporte publico por carretera que la gente paga para usar.'},
+{e:'Examen 2',c:'TRANSPORTATION - Lista: A.ambulance B.boat C.bike D.bus E.motorbike F.plane G.train',t:'',q:'3. Many people fly on it to go to a place.',o:['B. boat','D. bus','F. plane','G. train'],j:'F. plane - La gente vuela en avion para ir a lugares lejanos. "Fly on it" indica el avion.'},
+{e:'Examen 2',c:'Parte 2 - WHERE CAN YOU SEE THIS SIGN?',t:'Aviso: "How do I drive? Phone: 0152067"',q:'4. Where can you see this sign?',o:['A. on a plane','B. on a bus','C. on a boat'],j:'B. on a bus - "Como manejo?" con un numero de telefono es un aviso tipico en la parte trasera de buses.'},
+{e:'Examen 2',c:'Parte 2 - WHERE CAN YOU SEE THIS SIGN?',t:'Aviso: "New Toys: Green monsters, angry dolls, and black helicopters"',q:'5. Where can you see this sign?',o:['A. in a house','B. in a shop','C. in a zoo'],j:'B. in a shop - Un aviso anunciando juguetes nuevos se ve en una tienda de juguetes.'},
+{e:'Examen 2',c:'Parte 2 - WHERE CAN YOU SEE THIS SIGN?',t:'Aviso: "Please, take the one you want to read"',q:'6. Where can you see this sign?',o:['A. on a stool','B. on a computer','C. on a bookshelf'],j:'C. on a bookshelf - "Toma el que quieras leer" se refiere a libros en un estante/librero.'},
+{e:'Examen 2',c:'Parte 3 - COMPLETE THE CONVERSATION',t:'',q:'7. I can\'t eat a cold sandwich. It is horrible!',o:['A. I hope so.','B. I agree.','C. I am not.'],j:'B. I agree. - Cuando alguien se queja de algo, "Estoy de acuerdo" muestra que compartes la misma opinion.'},
+{e:'Examen 2',c:'Parte 3 - COMPLETE THE CONVERSATION',t:'',q:'8. I am going on vacation to Vancouver!',o:['A. That\'s great!','B. I like swimming!','C. You are first!'],j:'A. That\'s great! - Cuando alguien comparte buenas noticias, la respuesta natural y entusiasta es "Que genial!"'},
+{e:'Examen 2',c:'Parte 3 - COMPLETE THE CONVERSATION',t:'',q:'9. It rained a lot last night!',o:['A. Did you accept?','B. Did you understand?','C. Did you sleep?'],j:'C. Did you sleep? - Si llovio mucho la noche anterior, lo mas logico es preguntar si pudo dormir bien.'},
+{e:'Examen 2',c:'Parte 4 - THE ETHIOPIAN WOLF. Texto: "Some scientists have (10)_____ it is not a real wolf."',t:'',q:'10. Some scientists have _____ it is not a real wolf. (A.saying / B.said / C.say)',o:['A. saying','B. said','C. say'],j:'B. said - Present perfect: "have said". Despues de "have" se usa el participio pasado.'},
+{e:'Examen 2',c:'Parte 4 - THE ETHIOPIAN WOLF. Texto: "...studies show that (11)_____ close relationship to grey wolves is evident."',t:'',q:'11. ...that _____ close relationship to grey wolves is evident. (A.its / B.his / C.your)',o:['A. its','B. his','C. your'],j:'A. its - "Its" es el pronombre posesivo para animales y cosas. La relacion DEL lobo con otros canidos.'},
+{e:'Examen 2',c:'Parte 4 - THE ETHIOPIAN WOLF. Texto: "(12)_____ Ethiopian wolves are more similar to grey wolves..."',t:'',q:'12. _____ Ethiopian wolves are more similar to grey wolves... (A.This / B.That / C.These)',o:['A. This','B. That','C. These'],j:'B. That - "That" introduce una afirmacion o conclusion basada en la evidencia anterior del texto.'},
+{e:'Examen 2',c:'Parte 4 - THE ETHIOPIAN WOLF. Texto: "The (13)_____ group of Ethiopian wolves lives in the Bale Mountains."',t:'',q:'13. The _____ group of Ethiopian wolves. (A.larger / B.largest / C.large)',o:['A. larger','B. largest','C. large'],j:'B. largest - Con "The" se usa el superlativo "largest" (el mas grande grupo).'},
+{e:'Examen 2',c:'Parte 4 - THE ETHIOPIAN WOLF. Texto: "The largest group lives (14)_____ the Bale Mountains National Park."',t:'',q:'14. ...lives _____ the Bale Mountains National Park. (A.in / B.along / C.on)',o:['A. in','B. along','C. on'],j:'A. in - "Lives in" es la preposicion correcta para indicar ubicacion dentro de un lugar o parque.'},
+{e:'Examen 2',c:'Parte 5 - MY ARTISTIC ADVENTURE. Texto: "One morning, I found a Spanish television show with a French man who was painting a beautiful countryside."',t:'',q:'15. Where was the painter from?',o:['A. Ireland','B. Spain','C. France'],j:'C. France - El texto dice "a French man" = un hombre frances. El pintor era de Francia.'},
+{e:'Examen 2',c:'Parte 5 - MY ARTISTIC ADVENTURE. Texto: "He quickly made trees and rivers, simply by moving his hand across the canvas. He made it look simple and easy."',t:'',q:'16. She was mostly excited by the...',o:['A. painter\'s ability','B. painter\'s voice','C. painter\'s show'],j:'A. painter\'s ability - La impresiono su HABILIDAD para hacer que pintar pareciera simple y facil.'},
+{e:'Examen 2',c:'Parte 5 - MY ARTISTIC ADVENTURE. Texto: "Every Sunday morning, I would try to paint what he was painting."',t:'',q:'17. How often did she watch the show?',o:['A. three times a week','B. once a week','C. twice a week'],j:'B. once a week - "Every Sunday morning" = cada domingo por la manana = una vez por semana.'},
+{e:'Examen 2',c:'Parte 5 - MY ARTISTIC ADVENTURE. Texto: "I could not buy oil paints; I was only seven, and my parents would not buy them for me."',t:'',q:'18. She could not get oil paints because she...',o:['A. didn\'t speak Spanish','B. was too young','C. always watched TV'],j:'B. was too young - Solo tenia siete anos y sus padres no se los compraban. Era demasiado joven.'},
+{e:'Examen 2',c:'Parte 5 - MY ARTISTIC ADVENTURE. Texto: "After my mum saw what I did with her things, I was told I could not paint again."',t:'',q:'19. Stopping painting was...',o:['A. the painter\'s idea','B. her mother\'s order','C. her own decision'],j:'B. her mother\'s order - Su madre le dijo que no podia volver a pintar. Fue una orden materna.'},
+{e:'Examen 2',c:'Parte 6 - JONATHAN\'S TRIP TO COLOMBIA. Texto: "Colombia is a splendid country, extremely diverse and full of wonderful people."',t:'',q:'20. What is the writer trying to do in this article?',o:['A. encouraging tourists to visit Colombia','B. convincing people to buy a Colombian coffee farm','C. telling readers to run a coffee business','D. inviting tourists to write about places'],j:'A. encouraging tourists to visit Colombia - El escritor comparte experiencias maravillosas de Colombia para motivar a otros a visitarla.'},
+{e:'Examen 2',c:'Parte 6 - JONATHAN. Texto: "The family business has guests for just $45.000 a night. This includes three home-cooked meals a day, a swimming pool, and as much coffee as you can drink."',t:'',q:'21. What can a reader find out from this text?',o:['A. how to grow coffee on the farm','B. when the best time to visit is','C. what the accommodation price includes','D. which activities tourists prefer'],j:'C. what the accommodation price includes - El texto detalla explicitamente lo que incluye el precio de $45.000 por noche.'},
+{e:'Examen 2',c:'Parte 7 - VALENTINE\'S DAY. Texto: "Many people exchange gifts, chocolates, cards... but (22)_____ do we do this?"',t:'',q:'22. ...but _____ do we do this? (A.where / B.why / C.when / D.what)',o:['A. where','B. why','C. when','D. what'],j:'B. why - La pregunta busca la RAZON de la tradicion. "Why do we do this?" = Por que hacemos esto?'},
+{e:'Examen 2',c:'Parte 7 - VALENTINE\'S DAY. Texto: "One of the (23)_____ says that the original Valentine was a priest."',t:'',q:'23. One of the _____ says Valentine was a priest. (A.essays / B.stories / C.reports / D.letters)',o:['A. essays','B. stories','C. reports','D. letters'],j:'B. stories - "Una de las historias/leyendas" habla sobre el origen del Dia de San Valentin.'},
+{e:'Examen 2',c:'Parte 7 - VALENTINE\'S DAY. Texto: "When the King found (24)_____, he ordered soldiers to kill Valentine!"',t:'',q:'24. When the King found _____, he ordered soldiers to kill Valentine! (A.off / B.in / C.at / D.out)',o:['A. off','B. in','C. at','D. out'],j:'D. out - "Find out" es un verbo frasal que significa descubrir o enterarse de algo. Cuando el Rey se entero...'},
+{e:'Examen 2',c:'Parte 7 - VALENTINE\'S DAY. Texto: "Women buy (25)_____ 90% of the cards."',t:'',q:'25. Women buy _____ 90% of the cards. (A.almost / B.only / C.hardly / D.just)',o:['A. almost','B. only','C. hardly','D. just'],j:'A. almost - "Almost 90%" = casi el 90%, un poco menos. "Almost" significa casi/aproximadamente.'}
+];
+
+function pantalla(id){document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});document.getElementById(id).classList.add('active');window.scrollTo(0,0);}
+function iniciar(){
+  var i=document.getElementById('ii').value.trim();
+  var n=document.getElementById('nn').value.trim();
+  var g=document.getElementById('gg').value;
+  if(!i||!n||!g){alert('Completa todos los campos.');return;}
+  est={inst:i,nom:n,grd:g};
+  fIni=new Date().toLocaleString('es-CO',{timeZone:'America/Bogota'});
+  idx=0;resp=new Array(50).fill(null);tSeg=0;
+  clearInterval(tInt);
+  tInt=setInterval(function(){tSeg++;var m=Math.floor(tSeg/60),s=tSeg%60;document.getElementById('td').textContent=(m<10?'0':'')+m+':'+(s<10?'0':'')+s;},1000);
+  buildMap();showQ(0);pantalla('screen-pregunta');
+}
+function buildMap(){
+  var m=document.getElementById('mapa');m.innerHTML='';
+  for(var i=0;i<50;i++){var b=document.createElement('button');b.className='mapa-btn';b.textContent=i+1;b.dataset.i=i;(function(x){b.onclick=function(){if(resp[idx]!==null){idx=x;showQ(x);}}})(i);m.appendChild(b);}
+}
+function updMap(){
+  document.querySelectorAll('.mapa-btn').forEach(function(b,i){b.className='mapa-btn';if(resp[i]!==null)b.classList.add('respondida');if(i===idx)b.classList.add('actual');});
+}
+function showQ(i){
+  idx=i;var p=PQ[i];
+  document.getElementById('lp').textContent='Pregunta '+(i+1)+' / 50';
+  document.getElementById('pf').style.width=((i+1)/50*100).toFixed(0)+'%';
+  document.getElementById('eb').innerHTML='<span class="ebadge">'+p.e+'</span>';
+  document.getElementById('ca').innerHTML=p.c?'<div class="contexto-box">'+p.c.replace(/\n/g,'<br>')+'</div>':'';
+  document.getElementById('ta').innerHTML=p.t?'<div class="texto-lectura">'+p.t+'</div>':'';
+  document.getElementById('et').innerHTML='<strong>'+p.q+'</strong>';
+  var oc=document.getElementById('oc');oc.innerHTML='';
+  p.o.forEach(function(o){
+    var d=document.createElement('div');d.className='opcion';var l=o.charAt(0);
+    d.innerHTML='<div class="letra">'+l+'</div><div class="opcion-texto">'+o.substring(2).trim()+'</div>';
+    d.dataset.l=l;d.onclick=function(){pick(this,i);};oc.appendChild(d);
+  });
+  document.getElementById('fb').className='feedback-box';document.getElementById('fb').innerHTML='';
+  document.getElementById('bs').style.display='none';
+  if(resp[i]!==null){
+    var r=resp[i],co=COR[i];
+    oc.querySelectorAll('.opcion').forEach(function(op){
+      if(op.dataset.l===r)op.classList.add(r===co?'correcta':'incorrecta');
+      if(r!==co&&op.dataset.l===co)op.classList.add('mostrar-correcta');
+    });
+    showFB(r===co,p.j);
+    document.getElementById('bs').style.display='block';
+    document.getElementById('bs').textContent=i<49?'Siguiente':'Ver resultados';
+  }
+  updMap();
+}
+function pick(el,i){
+  if(resp[i]!==null)return;
+  var l=el.dataset.l,co=COR[i];resp[i]=l;
+  document.querySelectorAll('.opcion').forEach(function(op){
+    if(op.dataset.l===l)op.classList.add(l===co?'correcta':'incorrecta');
+    if(l!==co&&op.dataset.l===co)op.classList.add('mostrar-correcta');
+  });
+  showFB(l===co,PQ[i].j);
+  document.getElementById('bs').style.display='block';
+  document.getElementById('bs').textContent=i<49?'Siguiente':'Ver resultados';
+  updMap();
+}
+function showFB(ok,j){
+  var fb=document.getElementById('fb');
+  fb.className='feedback-box '+(ok?'correcto':'incorrecto');
+  fb.innerHTML=(ok?'Correcto! ':'Incorrecto. ')+j;
+}
+function siguiente(){if(idx<49)showQ(idx+1);else resultados();}
+function resultados(){
+  clearInterval(tInt);
+  var c=0,in2=0,s=0;
+  for(var i=0;i<50;i++){if(resp[i]===null)s++;else if(resp[i]===COR[i])c++;else in2++;}
+  var p=Math.round(c/50*100);
+  document.getElementById('pd').textContent=p;
+  document.getElementById('sc').textContent=c;document.getElementById('si').textContent=in2;document.getElementById('ss').textContent=s;
+  setTimeout(function(){document.getElementById('bf').style.width=Math.min(p,100)+'%';},200);
+  var nv,nt;
+  if(p<=35){nv=1;nt='Nivel 1 Minimo';}else if(p<=55){nv=2;nt='Nivel 2 Basico';}else if(p<=75){nv=3;nt='Nivel 3 Satisfactorio';}else{nv=4;nt='Nivel 4 Avanzado';}
+  document.getElementById('nd').textContent=nt;
+  for(var n=1;n<=4;n++)document.getElementById('n'+n).classList.remove('activo');
+  document.getElementById('n'+nv).classList.add('activo');
+  enviar(c,in2,s,p);pantalla('screen-resultados');
+}
+function enviar(c,i,s,p){
+  var pr=new URLSearchParams();
+  pr.append('prueba','Ingles');pr.append('fecha',fIni);pr.append('institucion',est.inst);pr.append('nombre',est.nom);pr.append('grado',est.grd);pr.append('correctas',c);pr.append('incorrectas',i);pr.append('sinResponder',s);pr.append('total',50);pr.append('puntaje',p);
+  fetch('https://script.google.com/macros/s/AKfycbz3UbYrpOMh1fXlaSICEe4922CldYrCDSpw-clqJzazPLyySYGO81IKMOF-Lx_27Imfww/exec',{method:'POST',body:pr,mode:'no-cors'}).catch(function(){});
+}
+function verRevision(){
+  var rc=document.getElementById('rc');rc.innerHTML='';
+  for(var i=0;i<50;i++){
+    var p=PQ[i],r=resp[i],co=COR[i];
+    var est2=r===null?'rs':(r===co?'rc':'ri');
+    var bt=r===null?'Sin responder':(r===co?'Correcta':'Incorrecta');
+    var bc=r===null?'sr':(r===co?'ok':'mal');
+    var oh='';
+    p.o.forEach(function(o){var l=o.charAt(0);var cl=l===co?'rc2':(l===r&&r!==co?'ri2':'');oh+='<div class="rop '+cl+'"><strong>'+l+'.</strong> '+o.substring(2).trim()+'</div>';});
+    var card=document.createElement('div');
+    card.className='rcard '+est2;
+    card.innerHTML='<div class="rh"><span style="font-size:0.87rem;color:var(--gray3);">P.'+(i+1)+' '+p.e+'</span><span class="rbadge '+bc+'">'+bt+'</span></div><div style="font-size:0.88rem;margin-bottom:10px;">'+p.q+'</div><div style="display:flex;flex-direction:column;gap:6px;margin-bottom:8px;">'+oh+'</div><div class="rjust">'+p.j+'</div>';
+    rc.appendChild(card);
+  }
+  pantalla('screen-revision');
+}
+function volverRes(){pantalla('screen-resultados');}
+function reiniciar(){clearInterval(tInt);tSeg=0;idx=0;resp=new Array(50).fill(null);pantalla('screen-registro');}
+</script>
+</body>
+</html>
